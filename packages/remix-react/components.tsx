@@ -120,7 +120,7 @@ interface PrefetchHandlers {
 function usePrefetchBehavior<T extends HTMLAnchorElement>(
   prefetch: PrefetchBehavior,
   theirElementProps: PrefetchHandlers
-): [boolean, React.RefObject<T>, Required<PrefetchHandlers>] {
+): [boolean, React.RefObject<T | null>, Required<PrefetchHandlers>] {
   let [maybePrefetch, setMaybePrefetch] = React.useState(false);
   let [shouldPrefetch, setShouldPrefetch] = React.useState(false);
   let { onFocus, onBlur, onMouseEnter, onMouseLeave, onTouchStart } =
@@ -428,21 +428,19 @@ function PrefetchPageLinksImpl({
   // just the manifest like the other links in here.
   let keyedPrefetchLinks = useKeyedPrefetchLinks(newMatchesForAssets);
 
-  return (
-    <>
-      {dataHrefs.map((href) => (
-        <link key={href} rel="prefetch" as="fetch" href={href} {...linkProps} />
-      ))}
-      {moduleHrefs.map((href) => (
-        <link key={href} rel="modulepreload" href={href} {...linkProps} />
-      ))}
-      {keyedPrefetchLinks.map(({ key, link }) => (
-        // these don't spread `linkProps` because they are full link descriptors
-        // already with their own props
-        <link key={key} {...link} />
-      ))}
-    </>
-  );
+  return (<>
+    {dataHrefs.map((href) => (
+      <link key={href} rel="prefetch" as="fetch" href={href} {...linkProps} />
+    ))}
+    {moduleHrefs.map((href) => (
+      <link key={href} rel="modulepreload" href={href} {...linkProps} />
+    ))}
+    {keyedPrefetchLinks.map(({ key, link }) => (
+      // these don't spread `linkProps` because they are full link descriptors
+      // already with their own props
+      (<link key={key} {...link} />)
+    ))}
+  </>);
 }
 
 /**
@@ -1201,7 +1199,7 @@ export const LiveReload =
       };
 
 function mergeRefs<T = any>(
-  ...refs: Array<React.MutableRefObject<T> | React.LegacyRef<T>>
+  ...refs: Array<React.MutableRefObject<T> | React.Ref<T>>
 ): React.RefCallback<T> {
   return (value) => {
     refs.forEach((ref) => {

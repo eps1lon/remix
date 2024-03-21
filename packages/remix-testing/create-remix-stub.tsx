@@ -98,8 +98,8 @@ export function createRemixStub(
     hydrationData,
     future,
   }: RemixStubProps) {
-    let routerRef = React.useRef<Router>();
-    let remixContextRef = React.useRef<RemixContextObject>();
+    let routerRef = React.useRef<Router>(undefined);
+    let remixContextRef = React.useRef<RemixContextObject>(undefined);
 
     if (routerRef.current == null) {
       remixContextRef.current = {
