@@ -428,19 +428,21 @@ function PrefetchPageLinksImpl({
   // just the manifest like the other links in here.
   let keyedPrefetchLinks = useKeyedPrefetchLinks(newMatchesForAssets);
 
-  return (<>
-    {dataHrefs.map((href) => (
-      <link key={href} rel="prefetch" as="fetch" href={href} {...linkProps} />
-    ))}
-    {moduleHrefs.map((href) => (
-      <link key={href} rel="modulepreload" href={href} {...linkProps} />
-    ))}
-    {keyedPrefetchLinks.map(({ key, link }) => (
-      // these don't spread `linkProps` because they are full link descriptors
-      // already with their own props
-      (<link key={key} {...link} />)
-    ))}
-  </>);
+  return (
+    <>
+      {dataHrefs.map((href) => (
+        <link key={href} rel="prefetch" as="fetch" href={href} {...linkProps} />
+      ))}
+      {moduleHrefs.map((href) => (
+        <link key={href} rel="modulepreload" href={href} {...linkProps} />
+      ))}
+      {keyedPrefetchLinks.map(({ key, link }) => (
+        // these don't spread `linkProps` because they are full link descriptors
+        // already with their own props
+        <link key={key} {...link} />
+      ))}
+    </>
+  );
 }
 
 /**
